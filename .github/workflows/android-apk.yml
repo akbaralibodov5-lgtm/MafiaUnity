@@ -10,9 +10,6 @@ on:
       - android-port
       - develop
 
-permissions:
-  contents: read
-
 concurrency:
   group: mafiaunity-android-${{ github.ref }}
   cancel-in-progress: true
@@ -40,19 +37,6 @@ jobs:
           lfs: true
           fetch-depth: 1
 
-      - name: Verify Unity activation secrets
-        shell: bash
-        env:
-          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
-          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-        run: |
-          set -euo pipefail
-          test -n "${UNITY_LICENSE}" || { echo "::error::UNITY_LICENSE is missing"; exit 1; }
-          test -n "${UNITY_EMAIL}" || { echo "::error::UNITY_EMAIL is missing"; exit 1; }
-          test -n "${UNITY_PASSWORD}" || { echo "::error::UNITY_PASSWORD is missing"; exit 1; }
-          echo "Unity activation secrets are present."
-
       - name: Cache Unity Library
         uses: actions/cache@v4
         with:
@@ -68,12 +52,11 @@ jobs:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
-          unityVersion: auto
+          unityVersion: 2019.3.9f1
           targetPlatform: Android
           androidExportType: androidPackage
           buildName: MafiaUnity-Android
           versioning: None
-          androidTargetSdkVersion: 28
           androidSymbolType: debugging
           allowDirtyBuild: false
 
