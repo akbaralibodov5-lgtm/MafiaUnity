@@ -62,6 +62,14 @@ namespace MafiaUnity
 
                 Status = "Mafia data imported successfully.";
                 Debug.Log(Status + " " + path);
+
+                var setup = FindObjectOfType<SetupGUI>();
+                if (setup != null)
+                {
+                    if (setup.pathSelection != null) setup.pathSelection.SetActive(false);
+                    if (setup.mainMenu != null) setup.mainMenu.SetActive(true);
+                    setup.SetupDefaultBackground();
+                }
             }
             catch (Exception ex)
             {
