@@ -10,6 +10,17 @@ namespace MafiaUnity
     {
         [SerializeField] private int targetFrameRate = 60;
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        private static void Initialize()
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+            var go = new GameObject("AndroidRuntimeBootstrap");
+            DontDestroyOnLoad(go);
+            go.AddComponent<AndroidRuntimeBootstrap>();
+            go.AddComponent<MobileTouchUI>();
+#endif
+        }
+
         private void Awake()
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
