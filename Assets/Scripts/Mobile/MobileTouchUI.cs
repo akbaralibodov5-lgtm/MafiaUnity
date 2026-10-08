@@ -32,13 +32,6 @@ namespace MafiaUnity
 #endif
         }
 
-        private void LateUpdate()
-        {
-#if UNITY_ANDROID && !UNITY_EDITOR
-            MobileInputState.ResetFrame();
-#endif
-        }
-
         private void BuildUI()
         {
             if (FindObjectOfType<EventSystem>() == null)
