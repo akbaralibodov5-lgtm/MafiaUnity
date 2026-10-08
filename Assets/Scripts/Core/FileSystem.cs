@@ -246,7 +246,7 @@ namespace MafiaUnity
                 return string.Empty;
 
             // Preserve case: Android filesystems are case-sensitive.
-            path = path.Replace("\\\\", "/");
+            path = path.Replace('\\', '/');
 
             if (!isFile && !path.EndsWith("/"))
                 return path + "/";
