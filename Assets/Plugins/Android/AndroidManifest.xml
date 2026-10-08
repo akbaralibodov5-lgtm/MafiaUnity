@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.mafiaunity.android">
+    <application android:label="MafiaUnity"
+                 android:theme="@style/UnityThemeSelector"
+                 android:usesCleartextTraffic="true">
+        <activity android:name="com.mafiaunity.android.MafiaUnityActivity"
+                  android:label="MafiaUnity"
+                  android:launchMode="singleTask"
+                  android:screenOrientation="landscape"
+                  android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen"
+                  android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>
