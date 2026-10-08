@@ -25,7 +25,8 @@ namespace MafiaUnity
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
             MobileInputState.Move = moveJoystick != null ? moveJoystick.Value : Vector2.zero;
-            MobileInputState.Look = lookPad != null ? lookPad.Delta : Vector2.zero;
+            if (lookPad != null)
+                MobileInputState.AddLook(lookPad.ConsumeDelta());
             MobileInputState.RunHeld = RunButton.Held;
             MobileInputState.CrouchHeld = CrouchButton.Held;
 #endif
@@ -70,7 +71,7 @@ namespace MafiaUnity
             CrouchButton = CreateButton("CROUCH", new Vector2(1f, 0f), new Vector2(-500f, 140f), 150f);
 
             var use = CreateButton("USE", new Vector2(1f, 1f), new Vector2(-240f, -190f), 170f);
-            use.OnDown = () => MobileInputState.UsePressed = true;
+            use.OnDown = () => MobileInputState.PressUse();
         }
 
         private static VirtualJoystick CreateJoystick(string name, Vector2 anchor, Vector2 size)
@@ -170,7 +171,7 @@ namespace MafiaUnity
 
         private sealed class LookPad : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
         {
-            public Vector2 Delta { get; private set; }
+            private Vector2 Delta { get; set; }
             private Vector2 lastPosition;
             private bool active;
 
@@ -190,6 +191,13 @@ namespace MafiaUnity
             public void OnPointerUp(PointerEventData eventData)
             {
                 active = false;
+            }
+
+            public Vector2 ConsumeDelta()
+            {
+                var value = Delta;
+                Delta = Vector2.zero;
+                return value;
             }
         }
 
