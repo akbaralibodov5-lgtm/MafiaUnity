@@ -66,7 +66,7 @@ namespace MafiaUnity
             moveJoystick = CreateJoystick("MoveJoystick", new Vector2(0f, 0f), new Vector2(300f, 300f));
             lookPad = CreateLookPad("LookPad");
 
-            RunButton = CreateButton("RUN", new Vector2(1f, 0f), new Vector2(-280f, 220f), 150f);
+            RunButton = CreateButton("WALK", new Vector2(1f, 0f), new Vector2(-280f, 220f), 150f);
             CrouchButton = CreateButton("CROUCH", new Vector2(1f, 0f), new Vector2(-500f, 140f), 150f);
 
             var use = CreateButton("USE", new Vector2(1f, 1f), new Vector2(-240f, -190f), 170f);
