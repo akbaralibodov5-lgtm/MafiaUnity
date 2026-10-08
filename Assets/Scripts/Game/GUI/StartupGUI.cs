@@ -102,7 +102,18 @@ public class StartupGUI : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+#if UNITY_ANDROID && !UNITY_EDITOR
+        if (AndroidDataPicker.Instance == null)
+        {
+            var pickerObject = new GameObject("AndroidDataPicker");
+            pickerObject.AddComponent<AndroidDataPicker>();
+        }
 
+        pathSelection.SetActive(false);
+        if (AndroidDataPicker.Instance != null)
+            AndroidDataPicker.Instance.PickFolder();
+        return;
+#else
         var drives = DriveInfo.GetDrives();
         selectedDrive = drives[0].Name;
         currentPath = selectedDrive;
@@ -119,9 +130,8 @@ public class StartupGUI : MonoBehaviour {
 
             var textComponent = clonedButton.transform.GetComponentInChildren<Text>();
             textComponent.text = drive.Name;
-
         }
-
+#endif
 	}
 	
 	// Update is called once per frame
