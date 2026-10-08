@@ -102,7 +102,7 @@ public class PlayerController : MonoBehaviour
 #if UNITY_ANDROID && !UNITY_EDITOR
         x = MobileInputState.Move.x;
         z = MobileInputState.Move.y;
-        isRunning = MobileInputState.RunHeld;
+        isRunning = !MobileInputState.RunHeld;
         isCrouching = MobileInputState.CrouchHeld;
         isUsing = MobileInputState.UsePressed;
 #endif
