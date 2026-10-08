@@ -27,8 +27,8 @@ namespace MafiaUnity
             MobileInputState.Move = moveJoystick != null ? moveJoystick.Value : Vector2.zero;
             if (lookPad != null)
                 MobileInputState.AddLook(lookPad.ConsumeDelta());
-            MobileInputState.RunHeld = RunButton.Held;
-            MobileInputState.CrouchHeld = CrouchButton.Held;
+            MobileInputState.RunHeld = RunButton != null && RunButton.Held;
+            MobileInputState.CrouchHeld = CrouchButton != null && CrouchButton.Held;
 #endif
         }
 
