@@ -18,6 +18,7 @@ namespace MafiaUnity
             DontDestroyOnLoad(go);
             go.AddComponent<AndroidRuntimeBootstrap>();
             go.AddComponent<MobileTouchUI>();
+            go.AddComponent<AndroidDataPicker>();
 #endif
         }
 
