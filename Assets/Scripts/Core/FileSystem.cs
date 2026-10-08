@@ -27,7 +27,7 @@ namespace MafiaUnity
         /// <param name="path"></param>
         public void RemoveOptionalPath(string path)
         {
-            paths.Remove(FixPath(path));
+            paths.Remove(Path.Combine(FixPath(path), "Data"));
         }
 
         /// <summary>
@@ -83,6 +83,7 @@ namespace MafiaUnity
         /// <returns></returns>
         public void DTAMountFiles()
         {
+            dtaFiles.Clear();
             //DTALoadFiles("A0.dta", 0xD8D0A975, 0x467ACDE0);
             DTALoadFiles("A1.dta", 0x3D98766C, 0xDE7009CD);
             DTALoadFiles("A2.dta", 0x82A1C97B, 0x2D5085D4);
@@ -105,7 +106,7 @@ namespace MafiaUnity
         /// <returns></returns>
         public bool DTALoadFiles(string dtaFileName, uint key1, uint key2)
         {
-            if (gamePath.Length <= 0)
+            if (string.IsNullOrEmpty(gamePath))
                 return false;
 
             var dtaReader = new DTALoader(key1, key2);
@@ -229,8 +230,8 @@ namespace MafiaUnity
                 gamePath = path;
                 ClearOptionalPaths();
 
-                //Mount dta files after correct path is set
-                //DTAMountFiles();
+                // Mount archives immediately after selecting a valid game directory.
+                DTAMountFiles();
 
                 return true;
             }
@@ -241,8 +242,11 @@ namespace MafiaUnity
 
         string FixPath(string path, bool isFile = false)
         {
-            path = path.ToLower();
-            path = path.Replace("\\", "/");
+            if (string.IsNullOrEmpty(path))
+                return string.Empty;
+
+            // Preserve case: Android filesystems are case-sensitive.
+            path = path.Replace('\\', '/');
 
             if (!isFile && !path.EndsWith("/"))
                 return path + "/";
@@ -254,9 +258,14 @@ namespace MafiaUnity
         {
             path = FixPath(path);
 
-            if (File.Exists(Path.Combine(path, "Game.exe")) && File.Exists(Path.Combine(path, "Setup.exe")))
-                return true;
-            else return false;
+#if UNITY_ANDROID && !UNITY_EDITOR
+            // Android imports the original PC data into app-private storage;
+            // Game.exe and Setup.exe are therefore intentionally not required.
+            return File.Exists(Path.Combine(path, "A1.dta"));
+#else
+            return File.Exists(Path.Combine(path, "Game.exe")) &&
+                   File.Exists(Path.Combine(path, "Setup.exe"));
+#endif
         }
     }
 }

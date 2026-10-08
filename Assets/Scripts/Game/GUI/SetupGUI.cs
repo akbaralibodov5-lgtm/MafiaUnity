@@ -95,7 +95,18 @@ public class SetupGUI : MonoBehaviour {
                 SetupDefaultBackground();
         }
         else
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+            // StartupGUI launches the native folder picker on Android.
+            if (AndroidDataPicker.Instance == null)
+            {
+                var pickerObject = new GameObject("AndroidDataPicker");
+                pickerObject.AddComponent<AndroidDataPicker>();
+            }
+#else
             PathSelectionMenu();
+#endif
+        }
 
         CommandTerminal.Terminal.Shell.AddCommand("rgpnow", (CommandTerminal.CommandArg[] args) => {
             PlayerPrefs.DeleteKey("gamePath");

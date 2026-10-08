@@ -61,6 +61,11 @@ public class PlayerController : MonoBehaviour
     {
         var x = Input.GetAxis("Mouse X") * Time.deltaTime * 800f;
         var y = Input.GetAxis("Mouse Y") * Time.deltaTime * 5f;
+#if UNITY_ANDROID && !UNITY_EDITOR
+        var mobileLook = MobileInputState.ConsumeLook();
+        x = mobileLook.x * Time.deltaTime * 3.5f;
+        y = mobileLook.y * Time.deltaTime * 0.035f;
+#endif
 
         cameraUpAndDown -= y;
 
@@ -95,6 +100,13 @@ public class PlayerController : MonoBehaviour
         var isRunning = !Input.GetButton("Run");
         var isCrouching = Input.GetButton("Crouch");
         var isUsing = Input.GetButtonDown("Use");
+#if UNITY_ANDROID && !UNITY_EDITOR
+        x = MobileInputState.Move.x;
+        z = MobileInputState.Move.y;
+        isRunning = !MobileInputState.RunHeld;
+        isCrouching = MobileInputState.CrouchHeld;
+        isUsing = MobileInputState.ConsumeUse();
+#endif
 
         isStrafing = false;
 
