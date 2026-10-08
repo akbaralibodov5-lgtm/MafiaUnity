@@ -2,13 +2,11 @@ package com.mafiaunity.android;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.Context;
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.DocumentsContract;
-import android.provider.OpenableColumns;
 import android.util.Log;
 
 import com.unity3d.player.UnityPlayer;
@@ -70,7 +68,7 @@ public class MafiaUnityActivity extends UnityPlayerActivity {
                         return;
                     }
 
-                    int copied = copyDtaFiles(treeUri, out);
+                    int copied = copyDtaFiles(treeUri, DocumentsContract.getTreeDocumentId(treeUri), out);
                     if (!hasRequiredData(out)) {
                         sendResult(false, "No valid Mafia DTA data found. Select the original Mafia: The City of Lost Heaven folder.");
                         return;
@@ -86,10 +84,9 @@ public class MafiaUnityActivity extends UnityPlayerActivity {
         }).start();
     }
 
-    private int copyDtaFiles(Uri treeUri, File destination) throws Exception {
+    private int copyDtaFiles(Uri treeUri, String directoryId, File destination) throws Exception {
         int count = 0;
-        String rootId = DocumentsContract.getTreeDocumentId(treeUri);
-        Uri children = DocumentsContract.buildChildDocumentsUriUsingTree(treeUri, rootId);
+        Uri children = DocumentsContract.buildChildDocumentsUriUsingTree(treeUri, directoryId);
 
         Cursor cursor = getContentResolver().query(
                 children,
@@ -107,13 +104,12 @@ public class MafiaUnityActivity extends UnityPlayerActivity {
                 String id = cursor.getString(0);
                 String name = cursor.getString(1);
                 String mime = cursor.getString(2);
-                Uri child = DocumentsContract.buildDocumentUriUsingTree(treeUri, id);
 
                 if (DocumentsContract.Document.MIME_TYPE_DIR.equals(mime)) {
-                    count += copyDtaFiles(child, destination);
+                    count += copyDtaFiles(treeUri, id, destination);
                 } else if (name != null && name.toLowerCase(Locale.US).endsWith(".dta")) {
                     File target = new File(destination, new File(name).getName());
-                    copyUriToFile(child, target);
+                    copyUriToFile(DocumentsContract.buildDocumentUriUsingTree(treeUri, id), target);
                     count++;
                 }
             }
