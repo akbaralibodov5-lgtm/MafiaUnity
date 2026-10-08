@@ -132,13 +132,14 @@ namespace MafiaUnity
         /// <returns></returns>
         public bool SetGamePath(string path)
         {
-            if (isInitialized)
-                return fileSystem.ValidateGamePath(path);
+            if (string.IsNullOrEmpty(path))
+                return false;
 
+            // Allow Android's native data picker to replace an existing
+            // selection. FileSystem.SetGamePath also remounts the DTA archives.
             if (fileSystem.SetGamePath(path))
             {
                 isInitialized = true;
-
                 return true;
             }
 
