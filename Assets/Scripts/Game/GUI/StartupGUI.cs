@@ -109,7 +109,7 @@ public class StartupGUI : MonoBehaviour {
             pickerObject.AddComponent<AndroidDataPicker>();
         }
 
-        pathSelection.SetActive(false);
+        gameObject.SetActive(false);
         if (AndroidDataPicker.Instance != null)
             AndroidDataPicker.Instance.PickFolder();
         return;
