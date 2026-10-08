@@ -22,6 +22,7 @@ import java.util.Locale;
 public class MafiaUnityActivity extends UnityPlayerActivity {
     private static final int REQUEST_MAFIA_FOLDER = 41090;
     private static final String TAG = "MafiaUnityData";
+    private static String destinationPath;
 
     public static void openMafiaFolderPicker(String destinationPath) {
         Activity activity = UnityPlayer.currentActivity;
@@ -29,11 +30,12 @@ public class MafiaUnityActivity extends UnityPlayerActivity {
             return;
         }
 
+        destinationPath = destinationPath;
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
         intent.addFlags(Intent.FLAG_GRANT_PREFIX_URI_PERMISSION);
-        intent.putExtra("mafia_destination", destinationPath);
+        
         activity.startActivityForResult(intent, REQUEST_MAFIA_FOLDER);
     }
 
@@ -58,7 +60,7 @@ public class MafiaUnityActivity extends UnityPlayerActivity {
         } catch (Exception ignored) {
         }
 
-        final String destination = data.getStringExtra("mafia_destination");
+        final String destination = destinationPath;
         new Thread(new Runnable() {
             @Override public void run() {
                 try {
