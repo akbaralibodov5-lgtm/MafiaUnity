@@ -106,7 +106,7 @@ namespace MafiaUnity
         /// <returns></returns>
         public bool DTALoadFiles(string dtaFileName, uint key1, uint key2)
         {
-            if (gamePath.Length <= 0)
+            if (string.IsNullOrEmpty(gamePath))
                 return false;
 
             var dtaReader = new DTALoader(key1, key2);
